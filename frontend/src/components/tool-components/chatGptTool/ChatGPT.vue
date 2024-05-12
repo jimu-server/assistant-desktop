@@ -82,11 +82,12 @@ import {
 } from "@/components/tool-components/chatGptTool/chat/model/chat";
 import {SendTextMessage} from "@/components/tool-components/chatGptTool/gptutil";
 import draggable from 'vuedraggable'
+import MainPage from "@/components/system-components/layouts/MainPage.vue";
 
 const {getPaletteColor} = colors
 
 const app = useAppStore()
-const splitterModel = ref(10)
+const splitterModel = ref(20)
 const splitterModelLimit = ref([20, 30])
 const splitterModel2 = ref(30)
 const splitterModel2Limit = ref([30, 50])

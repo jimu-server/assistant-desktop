@@ -18,7 +18,8 @@
           />
           <window-scroll v-show="widowsLabel.windowLabels.length !== 0"/>
           <q-space/>
-          <q-btn dense square flat :icon=" $q.dark.isActive?'jimu-light':'jimu-dark'" @click.stop="alter"
+          <q-btn :replace="false" @dblclick.stop  dense square flat :icon=" $q.dark.isActive?'jimu-light':'jimu-dark'"
+                 @click.stop="alter"
                  style="height: 100%;width: 40px;--wails-draggable: no-drag;"/>
           <WindowWailsMinimizeBtn/>
           <WindowWailsToggleBtn/>

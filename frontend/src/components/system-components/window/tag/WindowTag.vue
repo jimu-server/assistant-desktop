@@ -2,7 +2,7 @@
   <Transition class="animate__animated animate__zoomIn">
     <div class="label-body bg-transparent column" @mousemove="showClose" @mouseleave="hideClose">
       <div class="row fit">
-        <div class="column justify-center" @click.stop="OpenWindow" >
+        <div class="column justify-center" @click.stop="OpenWindow" @dblclick.stop>
           <q-icon style="margin-left: 5px" :name="win.icon"/>
         </div>
         <div class="label-title column justify-center" @click.stop="OpenWindow">

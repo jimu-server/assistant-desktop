@@ -5,7 +5,7 @@ const desktop = useWailsStore();
 </script>
 
 <template>
-  <q-btn dense square flat class="window-minimize" icon="jimu-zuixiaohua1" @click.stop="desktop.desktop_minimize"
+  <q-btn :replace="false" dense square flat class="window-minimize" icon="jimu-zuixiaohua1" @click.stop="desktop.desktop_minimize"
          style="height: 100%;width: 43px;--wails-draggable:no-drag;"/>
 </template>
 
