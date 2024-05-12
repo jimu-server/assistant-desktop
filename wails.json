@@ -1,0 +1,20 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "assistant",
+  "outputfilename": "assistant",
+  "frontend:install": "yarn install",
+  "frontend:build": "yarn run build",
+  "frontend:dev:watcher": "yarn run dev",
+  "frontend:dev:serverUrl": "auto",
+  "info": {
+    "companyName": "jimu",
+    "productName": "assistant",
+    "productVersion": "0.0.0",
+    "copyright": "Copyright.........",
+    "comments": "Built using Wails (https://wails.app)"
+  },
+  "author": {
+    "name": "awen",
+    "email": "zhiwen_der@qq.com"
+  }
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html id="html" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>jimu</title>
+      <style>
+          /*
+            html 样式配合 wails 的无边框,窗口透明 设置,避免在dark的情况下 拖动窗口有白边
+          */
+          html{
+              background-color: white;
+          }
+          html[class="dark"]{
+              background-color: black;
+          }
+      </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

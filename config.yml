@@ -1,0 +1,63 @@
+app:
+  number: 1
+  # http 端口配置
+  port: :8080
+  logger:
+    # 日志级别
+    level: debug
+    # 日志输出路径
+    filename: system.log
+    maxsize: 100
+    maxbackups: 10
+    maxage: 30
+  # 数据库连接协议
+  database: host=localhost user=postgres password=Awen*0802^ dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Shanghai
+  # redis
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    db: 0
+  key: gim
+  email:
+    user: jimuos@163.com
+    host: smtp.163.com
+    port: 465
+    password: OFLSPAKBOEACDAAM
+  # openim 配置
+  openim:
+    secret: openIM123
+    admin: openIMAdmin
+    init:
+      platformID: 5
+      apiAddr: http://82.157.160.117:10002
+      wsAddr: ws://82.157.160.117:10001
+      DataDir: ../
+      LogLevel: 6
+      IsExternalExtensions: true
+      IsLogStandardOutput: true
+  minio:
+    endpoint: 82.157.160.117:10005
+    accessKeyID: root
+    secretAccessKey: openIM123
+    secure: false
+
+  ## 腾讯云对象存储配置
+  tencent:
+    BucketURL: https://jimuos-1252940994.cos.ap-nanjing.myqcloud.com
+    ServiceURL: https://cos.ap-nanjing.myqcloud.com
+    SecretID: xxx
+    SecretKey: xx
+
+  rabbitMQ:
+    host: localhost
+    port: 5672
+    user: guest
+    password: guest
+  pay:
+    alipay:
+      appID: 9021000135694366
+      appPublicCert: ca/appPublicCert.crt
+      alipayPublicKey: ca/alipayPublicCert.crt
+      alipayRootKey: ca/alipayRootCert.crt
+
