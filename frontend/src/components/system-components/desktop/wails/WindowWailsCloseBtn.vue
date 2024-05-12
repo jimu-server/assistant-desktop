@@ -6,7 +6,7 @@ const desktop = useWailsStore();
 </script>
 
 <template>
-  <q-btn dense square flat class="close-btn" icon="jimu-guanbi" @click.stop="desktop.desktop_exit()"
+  <q-btn dense square flat class="close-btn" icon="jimu-guanbi" @click.stop="desktop.desktop_exit"
          style="height: 100%;width: 43px;--wails-draggable:no-drag;font-size: 10px"/>
 </template>
 

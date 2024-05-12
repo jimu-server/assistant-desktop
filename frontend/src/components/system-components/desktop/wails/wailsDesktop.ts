@@ -12,8 +12,8 @@ import {
     WindowToggleMaximise,
     WindowUnminimise
 } from "../../../../../wailsjs/runtime";
-import {Refresh, Theme} from "../../../../../wailsjs/go/main/App";
 import {defineStore} from "pinia";
+import {Refresh, Theme} from "../../../../../wailsjs/go/app/Window";
 
 
 export const useWailsStore = defineStore('wails-desktop', {
@@ -41,7 +41,6 @@ export const useWailsStore = defineStore('wails-desktop', {
             WindowSetMaxSize(0, 0)
             WindowSetMinSize(1024, 600)
             await WindowSetSize(1024, 600)
-            // await Resize(true)
             setTimeout(() => {
                 WindowCenter()
                 this.desktop_show()
@@ -52,7 +51,6 @@ export const useWailsStore = defineStore('wails-desktop', {
             WindowSetMinSize(360, 400)
             WindowSetMaxSize(360, 400)
             await WindowSetSize(360, 400)
-            // await Resize(false)
             setTimeout(() => {
                 WindowCenter()
                 this.desktop_show()

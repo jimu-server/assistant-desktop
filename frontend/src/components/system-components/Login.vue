@@ -5,8 +5,8 @@
         <div class="fit column">
           <q-bar class="bg-transparent" style="padding: 0;--wails-draggable:drag; height: 40px">
             <q-space/>
-            <WindowMinimizeBtn/>
-            <WindowCloseBtn/>
+            <WindowWailsMinimizeBtn/>
+            <WindowWailsCloseBtn/>
           </q-bar>
           <q-card flat id="login" ref="logRef" class="login-box" style="flex-grow: 1">
             <div class="fit" id="loginBox">
@@ -242,9 +242,9 @@ import {ElMessage, FormInstance, FormItemRule, FormRules} from "element-plus";
 import {loadUserInfo} from "@/components/system-components/utils/userutil";
 import {defaultLogin, doResetPassword, getPhoneCode, registerUser} from "@/components/system-components/request";
 import ForGetPassword from "@/components/system-components/ForGetPassword.vue";
-import WindowMinimizeBtn from "@/components/system-components/desktop/WindowMinimizeBtn.vue";
-import WindowCloseBtn from "@/components/system-components/desktop/WindowCloseBtn.vue";
 import {useWailsStore} from "@/components/system-components/desktop/wails/wailsDesktop";
+import WindowWailsCloseBtn from "@/components/system-components/desktop/wails/WindowWailsCloseBtn.vue";
+import WindowWailsMinimizeBtn from "@/components/system-components/desktop/wails/WindowWailsMinimizeBtn.vue";
 
 const user = userStore()
 const router = useRouter()

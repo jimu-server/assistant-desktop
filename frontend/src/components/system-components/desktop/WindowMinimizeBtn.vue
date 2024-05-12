@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {desktop_minimize} from "@/components/system-components/desktop/desktop";
+
 
 </script>
 
 <template>
-  <q-btn dense square flat class="window-minimize" icon="jimu-zuixiaohua1" @click.stop="desktop_minimize"
+  <q-btn dense square flat class="window-minimize" icon="jimu-zuixiaohua1"
          style="height: 100%;width: 43px;--wails-draggable:no-drag;"/>
 </template>
 

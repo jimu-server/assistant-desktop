@@ -1,7 +1,7 @@
 <template>
   <div ref="tray" class="column justify-end fit">
     <q-list dense>
-      <MenuItem icon="jimu-exit" text="退出" @click="desktop_exit"/>
+      <MenuItem icon="jimu-exit" text="退出"/>
     </q-list>
   </div>
 </template>
@@ -11,7 +11,6 @@
 
 import {onMounted, ref} from "vue";
 import MenuItem from "@/components/system-components/widget/MenuItem.vue";
-import {desktop_exit} from "@/components/system-components/desktop/desktop";
 
 const tray = ref()
 
