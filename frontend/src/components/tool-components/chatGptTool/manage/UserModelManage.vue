@@ -18,46 +18,43 @@
           <div class="column" style="flex-grow: 1">
             <q-scroll-area class="fit" :visible="false">
               <q-list class="fit">
-                <template v-for="(item,index) in ctx.ui.modelList">
-                  <!-- id==pid 的模型属于系统预置模型,不能暴露给用户个人操作 -->
-                  <q-item v-if="item.id!=item.pid">
-                    <q-item-section avatar>
-                      <q-avatar :icon="'img:'+item.picture"/>
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>
-                        <span>{{ item.name }}</span>
-                        <span style="margin-left: 5px" class="text-grey-7">{{ item.model }}</span>
-                      </q-item-label>
-                      <q-item-label v-if="!item.isDownload && item.downloads">
-                        <div class="full-width">
-                          <q-linear-progress v-if="progressValue==0" size="md" :indeterminate="progressValue==0"
-                                             :value="progressValue"/>
-                          <q-linear-progress v-else size="md" :value="progressValue">
-                          </q-linear-progress>
-                        </div>
-                        <div class="full-width ellipsis text-grey-6" style="font-size: 10px;align-content: center">
-                          {{ progressInfo }}
-                        </div>
-                      </q-item-label>
-                    </q-item-section>
-                    <q-item-section avatar>
-                      <template v-if="item.isDownload">
-                        <span class="text-grey-7" style="font-size: 10px">以拉取</span>
-                      </template>
-                      <template v-else>
-                        <q-btn v-if="!flag" flat dense icon="jimu-yunxiazai_o" @click="downloadModel(item)"
-                               color="primary"/>
-                        <q-btn v-if="item.downloads" flat dense icon="jimu-guanbi" @click="clean"/>
-                      </template>
-                    </q-item-section>
-                    <q-item-section avatar v-if="item.isDownload">
-                      <div class="fit column justify-center">
-                        <q-btn dense icon="jimu-shanchu" color="red" flat @click="delModel(item)"/>
-                      </div>
-                    </q-item-section>
-                  </q-item>
-                </template>
+                <q-item v-for="(item,index) in ctx.ui.modelList">
+                  <q-item-section avatar>
+                    <q-avatar :icon="'img:'+'./GPT.png'"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>
+                      <span>{{ item.name }}</span>
+                      <span style="margin-left: 5px" class="text-grey-7">{{ item.model }}</span>
+                    </q-item-label>
+                    <!--                    <q-item-label v-if="!item.isDownload && item.downloads">
+                                          <div class="full-width">
+                                            <q-linear-progress v-if="progressValue==0" size="md" :indeterminate="progressValue==0"
+                                                               :value="progressValue"/>
+                                            <q-linear-progress v-else size="md" :value="progressValue">
+                                            </q-linear-progress>
+                                          </div>
+                                          <div class="full-width ellipsis text-grey-6" style="font-size: 10px;align-content: center">
+                                            {{ progressInfo }}
+                                          </div>
+                                        </q-item-label>-->
+                  </q-item-section>
+                  <!--                  <q-item-section avatar>
+                                      <template v-if="item.isDownload">
+                                        <span class="text-grey-7" style="font-size: 10px">以拉取</span>
+                                      </template>
+                                      <template v-else>
+                                        <q-btn v-if="!flag" flat dense icon="jimu-yunxiazai_o" @click="downloadModel(item)"
+                                               color="primary"/>
+                                        <q-btn v-if="item.downloads" flat dense icon="jimu-guanbi" @click="clean"/>
+                                      </template>
+                                    </q-item-section>
+                                    <q-item-section avatar v-if="item.isDownload">
+                                      <div class="fit column justify-center">
+                                        <q-btn dense icon="jimu-shanchu" color="red" flat @click="delModel(item)"/>
+                                      </div>
+                                    </q-item-section>-->
+                </q-item>
               </q-list>
             </q-scroll-area>
           </div>
@@ -85,6 +82,7 @@ const progress = ref<ProgressResponse>(null)
 const text = ref('')
 const app = useAppStore()
 const model = defineModel({default: false})
+
 // 计算下载进度
 const progressValue = computed(() => {
   if (progress.value == null) {

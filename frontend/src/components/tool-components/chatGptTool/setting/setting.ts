@@ -3,5 +3,5 @@ export interface OllamaSetting {
     // ollama 模型服务地址 一般默认 本机地址
     host: string
     // 本地模型存储路径
-    localPath: string
+    ollamaModel: string
 }

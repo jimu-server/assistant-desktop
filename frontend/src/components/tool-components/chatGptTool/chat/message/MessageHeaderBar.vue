@@ -16,7 +16,7 @@
     </q-menu>
   </q-btn>
   <KnowledgeFileManage v-model="fileManageFlag"/>
-  <OllamaCreateModel v-model="ollamaCreateFlag"/>
+<!--  <OllamaCreateModel v-model="ollamaCreateFlag"/>-->
   <UserModelManage v-model="userModelManageFlag"/>
 </template>
 
@@ -26,6 +26,8 @@ import OllamaModelSelect from "@/components/tool-components/chatGptTool/widget/O
 import MenuItem from "@/components/system-components/widget/MenuItem.vue";
 import {ref} from "vue";
 import KnowledgeFileManage from "@/components/tool-components/chatGptTool/widget/knowledge/KnowledgeFileManage.vue";
+import UserModelManage from "@/components/tool-components/chatGptTool/manage/UserModelManage.vue";
+
 
 const fileManageFlag = ref(false)
 const ollamaCreateFlag = ref(false)

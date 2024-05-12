@@ -27,19 +27,22 @@ const vSizeS = {
 }
 
 function sizeChange(width: number, height: number) {
+  console.log(width, height)
   s.w = width
   s.h = height
 }
 
 onMounted(() => {
+
   setTimeout(() => {
     s.w = scrollX.value.clientWidth
     s.h = scrollX.value.clientHeight
+    console.log(s.w, s.h)
   }, 200)
 })
 
 onUnmounted(() => {
-
+  console.log(s.w, s.h)
 })
 </script>
 

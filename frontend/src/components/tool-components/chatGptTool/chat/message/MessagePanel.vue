@@ -53,6 +53,8 @@ import {updateTheme} from "@/components/tool-components/chatGptTool/chat/style/u
 import MenuItem from "@/components/system-components/widget/MenuItem.vue";
 import OllamaModelSelect from "@/components/tool-components/chatGptTool/widget/OllamaModelSelect.vue";
 import KnowledgeFileManage from "@/components/tool-components/chatGptTool/widget/knowledge/KnowledgeFileManage.vue";
+import MessageHeaderBar from "@/components/tool-components/chatGptTool/chat/message/MessageHeaderBar.vue";
+import ChatMessage from "@/components/tool-components/chatGptTool/chat/message/ChatMessage.vue";
 
 const scrollAreaRef = ref()
 const ctx = useGptStore()

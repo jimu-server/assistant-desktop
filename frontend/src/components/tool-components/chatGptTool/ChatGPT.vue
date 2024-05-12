@@ -82,7 +82,6 @@ import {
 } from "@/components/tool-components/chatGptTool/chat/model/chat";
 import {SendTextMessage} from "@/components/tool-components/chatGptTool/gptutil";
 import draggable from 'vuedraggable'
-import MainPage from "@/components/system-components/layouts/MainPage.vue";
 
 const {getPaletteColor} = colors
 
