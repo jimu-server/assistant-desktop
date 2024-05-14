@@ -54,10 +54,15 @@ func (a *Window) Startup(ctx context.Context) {
 			logger.Logger.Warn(err.Error())
 		}
 	}()
+	// 运行 Ollama
+	go func() {
+
+	}()
 	// 运行任务托盘
 	go func() {
 		systray.Run(InitSystray(a), onExit)
 	}()
+
 }
 
 func (a *Window) Refresh() {

@@ -390,8 +390,8 @@ export function registerUser(data: any) {
 }
 
 export function appSetting(tools: string[]) {
-    return new Promise<Tree<AppSetting>[]>(resolve => {
-        axiosForServer.post<Result<Tree<AppSetting>[]>>('/api/settings', {
+    return new Promise<Tree<AppSetting<any>>[]>(resolve => {
+        axiosForServer.post<Result<Tree<AppSetting<any>>[]>>('/api/settings', {
             tools: tools
         }).then(({data}) => {
             if (data.code != 200) {
