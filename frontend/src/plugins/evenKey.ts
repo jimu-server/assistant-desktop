@@ -4,8 +4,10 @@ export const GlobalNotification = "GlobalNotification"
 export const MessageObserver = "MessageObserver"
 // 发送消息触发消息面板滚动条
 export const SendActionScroll = "SendActionScroll"
+export const ScrollToBottom = "ScrollToBottom"
 
 export const ScrollMove = "ScrollMove"
+export const TypewriterScrollMove = "TypewriterScrollMove"
 
 export const UpdateChatViewUI = "UpdateChatViewUI"
 
@@ -33,3 +35,7 @@ export const UpdateAuthWindowEvent = "UpdateAuthWindowEvent"
 
 
 export const UpdateTool = "UpdateTool"
+
+
+// UserLogout 用户触发登出事件 用于处理用户缓存的相关数据处理
+export const UserLogout = "UserLogout"

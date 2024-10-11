@@ -1,5 +1,5 @@
 <template>
-  <q-page id="page-view" class="column justify-center">
+  <q-page id="page-view" class="full-width column">
     <slot>
 
     </slot>
@@ -7,22 +7,14 @@
 </template>
 
 <script setup lang="ts">
-
-import {onMounted} from "vue";
-import {useAppStore} from "@/store/app";
-
+import {useAppStore} from "@/components/system-components/store/app";
 const app = useAppStore()
-
-
-onMounted(async () => {
-  let byId = document.getElementById("page-view");
-  app.ui.page.height = byId.style.minHeight
-})
 </script>
 
 
 <style scoped>
 #page-view {
   overflow: hidden;
+  height: calc(v-bind('app.ui.page.height') * 1px);
 }
 </style>

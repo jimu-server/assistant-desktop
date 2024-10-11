@@ -1,9 +1,9 @@
 <template>
-  <q-avatar v-if="user.info.user" size="30px">
-    <img :src="user.info.user.picture!=''?user.info.user.picture:app.defaultAvatar" alt="" style="user-select: none"/>
+  <q-avatar size="30px" style="user-select:none;">
+    <img :src="user.info.user.picture!=''?user.info.user.picture:app.defaultAvatar" alt=""/>
     <q-menu
         anchor="top right" self="top left"
-        style="width: 300px; height: 400px;"
+        style="width: 300px;"
     >
       <q-card
           class="fit column"
@@ -100,8 +100,6 @@
           </div>
         </div>
         <div class="row justify-center" style="margin-bottom: 20px">
-          <!--          <q-btn dense flat label="编辑资料" @click="edit=true" style="width: 100%;height: 100%" color="primary"
-                           :ripple="false" v-close-popup/>-->
           <el-button @click="edit=true" style="width: 90%;height: 100%" text v-close-popup>
             编辑资料
           </el-button>
@@ -118,13 +116,13 @@
 import {onMounted, ref} from 'vue'
 import type {UploadInstance} from 'element-plus'
 
-import {userStore} from "@/store/user";
+import {userStore} from "@/components/system-components/store/user";
 import {getUserJoinOrgRoleList, getUserOrgDefaultRole} from "@/components/system-components/request";
 import {Org, Role} from "@/components/system-components/model/system";
 import emitter from "@/plugins/event";
 import {UpdateAuthEvent} from "@/plugins/evenKey";
 import UserInfoEditorDialog from "@/components/system-components/avatar/UserInfoEditorDialog.vue";
-import {useAppStore} from "@/store/app";
+import {useAppStore} from "@/components/system-components/store/app";
 
 const user = userStore()
 const app = useAppStore()
@@ -146,6 +144,12 @@ function changeRole(value: Role) {
   emitter.emit(UpdateAuthEvent)
 
 }
+
+
+onMounted(() => {
+
+})
+
 
 </script>
 

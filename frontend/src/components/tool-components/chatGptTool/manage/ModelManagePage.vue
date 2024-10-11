@@ -59,13 +59,13 @@
 
 <script setup lang="ts">
 
-import {useGptStore} from "@/components/tool-components/chatGptTool/chat/store/gpt";
+import {useGptStore} from "@/components/tool-components/chatGptTool/store/gpt";
 import {computed, onMounted, ref} from "vue";
-import {LLmMole, ProgressResponse} from "@/components/tool-components/chatGptTool/chat/model/model";
+import {LLmMole, ProgressResponse} from "@/components/tool-components/chatGptTool/model/model";
 import {GetHeaders} from "@/plugins/axiosutil";
 import {ElMessage, ElNotification} from "element-plus";
 import {deleteModel} from "@/components/tool-components/chatGptTool/chatRequest";
-import {useAppStore} from "@/store/app";
+import {useAppStore} from "@/components/system-components/store/app";
 
 const ctx = useGptStore()
 // 只允许单个下载

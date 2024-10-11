@@ -1,16 +1,13 @@
 package main
 
 import (
+	"context"
 	"embed"
-	"github.com/jimu-server/assistant-desktop/app"
-	_ "github.com/jimu-server/gpt"
-	"github.com/jimu-server/logger"
-	_ "github.com/jimu-server/mq"
-	_ "github.com/jimu-server/notify"
-	_ "github.com/jimu-server/org"
-	_ "github.com/jimu-server/oss"
-	_ "github.com/jimu-server/pay"
-	"github.com/wailsapp/wails/v2/pkg/application"
+	"fmt"
+	"github.com/wailsapp/wails/v2"
+	"github.com/wailsapp/wails/v2/pkg/options"
+	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
+	"log"
 )
 
 //go:embed all:frontend/dist
@@ -20,9 +17,36 @@ var assets embed.FS
 var icon []byte
 
 func main() {
-	win := app.InitApp("assistant", icon, assets)
-	win.Application = application.NewWithOptions(win.Option)
-	if err := win.Application.Run(); err != nil {
-		logger.Logger.Error(err.Error())
+	app := &App{}
+
+	err := wails.Run(&options.App{
+		Title:  "Basic Demo",
+		Width:  1024,
+		Height: 768,
+		AssetServer: &assetserver.Options{
+			Assets: assets,
+		},
+		OnStartup:  app.startup,
+		OnShutdown: app.shutdown,
+		Bind: []interface{}{
+			app,
+		},
+	})
+	if err != nil {
+		log.Fatal(err)
 	}
+}
+
+type App struct {
+	ctx context.Context
+}
+
+func (b *App) startup(ctx context.Context) {
+	b.ctx = ctx
+}
+
+func (b *App) shutdown(ctx context.Context) {}
+
+func (b *App) Greet(name string) string {
+	return fmt.Sprintf("Hello %s!", name)
 }

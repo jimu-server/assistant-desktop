@@ -22,21 +22,19 @@
         <q-splitter
             v-model="splitterModel"
             :limits="splitterModelLimit"
-            style="overflow: hidden"
             class="fit"
         >
           <template v-slot:before>
-            <div class="fit" style="overflow: hidden">
+            <div class="fit column">
               <SettingItemList v-model:tab="tab" :list="app.settings"/>
             </div>
           </template>
 
           <template v-slot:after>
             <div class="fit" style="overflow: hidden">
-              <q-scroll-area>
-
+              <q-scroll-area class="fit" :visible="false">
+                <SettingView v-model:tab="tab" :list="app.settings"/>
               </q-scroll-area>
-              <SettingView v-model:tab="tab" :list="app.settings"/>
             </div>
           </template>
         </q-splitter>
@@ -49,14 +47,14 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
 import {AppSetting} from "@/components/system-components/model/system";
-import {useAppStore} from "@/store/app";
+import {useAppStore} from "@/components/system-components/store/app";
+import SettingItemList from "@/components/system-components/setting/SettingItemList.vue";
+import SettingView from "@/components/system-components/setting/SettingView.vue";
 
 const model = defineModel({default: false, required: true})
 const splitterModel = ref(15)
 const splitterModelLimit = ref([15, 15])
-
-// 1 默认选中 账号设置
-const tab = ref("1")
+const tab = ref("")
 const app = useAppStore()
 
 

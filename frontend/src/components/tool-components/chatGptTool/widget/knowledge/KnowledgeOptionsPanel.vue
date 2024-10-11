@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-icon size="20px" class="edit-tool-option" name="jimu-zhishi">
+    <q-icon size="md" class="edit-tool-option" name="jimu-zhishi">
       <q-tooltip :offset="[0, 0]">
         知识库
       </q-tooltip>
@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
 import {getKnowledge} from "@/components/tool-components/chatGptTool/chatRequest";
-import {useGptStore} from "@/components/tool-components/chatGptTool/chat/store/gpt";
+import {useGptStore} from "@/components/tool-components/chatGptTool/store/gpt";
 
 
 const ctx = useGptStore()

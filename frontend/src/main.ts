@@ -10,6 +10,7 @@ import 'highlight.js/styles/github.css';
 import {Dialog, Notify, Quasar} from 'quasar'
 import quasarLang from 'quasar/lang/zh-CN'
 import quasarIconSet from 'quasar/icon-set/svg-themify'
+import 'hover.css'
 // Import Quasar css
 import 'quasar/src/css/index.sass'
 
@@ -21,20 +22,16 @@ import './styles/el-light.scss'
 import './styles/el-dark.scss'
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-// vueflow
-import './styles/vueflow.css'
+
 import {init} from "@/init";
-//
-import Vue3DraggableResizable from 'vue3-draggable-resizable'
+
 //default styles
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 
-import '@/components/tool-components/chatGptTool/chat/style/md.css'
-import '@/components/tool-components/chatGptTool/chat/style/md-dark.css'
+import '@/components/tool-components/chatGptTool/style/md.css'
+import '@/components/tool-components/chatGptTool/style/md-dark.css'
 import '@/components/tool-components/chatGptTool/chat/initPrism'
 
-import ai from 'src/assets/ai.svg'
-import gpt from 'src/assets/GPT.png'
 
 const app = createApp(App)
 
@@ -47,7 +44,6 @@ app.use(Quasar, {
     lang: quasarLang,
     iconSet: quasarIconSet,
 })
-app.use(Vue3DraggableResizable)
 app.use(pina)
 app.use(router)
 app.use(ElementPlus, {

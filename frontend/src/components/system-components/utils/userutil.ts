@@ -1,9 +1,9 @@
 /*
 * @description: 重新加载用户信息
 * */
-import {userStore} from "@/store/user";
+import {userStore} from "@/components/system-components/store/user";
 import pina from "@/pinia";
-import {useToolStore} from "@/store/tool";
+import {useToolStore} from "@/components/system-components/store/tool";
 import {
     appSetting,
     getDicts,
@@ -14,10 +14,11 @@ import {
     getUserJoinOrgList,
     getUserJoinOrgRoleList
 } from "@/components/system-components/request";
-import {getAllNotify} from "@/components/system-components/tool/notifyTool/notifyRequest";
-import {useAuthStore} from "@/store/auth";
-import {useNotifyStore} from "@/store/tool/notify";
-import {useAppStore} from "@/store/app";
+import {useAuthStore} from "@/components/system-components/store/auth";
+import {useNotifyStore} from "@/components/system-tool/notifyTool/store/notify";
+import {useAppStore} from "@/components/system-components/store/app";
+import {getAllNotify} from "@/components/system-tool/notifyTool/notifyRequest";
+import CryptoJS from 'crypto-js'
 
 export async function loadUserInfo() {
     let user = userStore(pina)
@@ -29,9 +30,7 @@ export async function loadUserInfo() {
     // todo 获取用户个人信息
     await baseInfo()
     // todo 加载用户已授权的工具栏按钮
-    tool.buttons = []
-    tool.buttons.push(...await getUserAuthTool(user.info.org.id, user.info.role.id, 1))
-    tool.buttons.push(...await getUserAuthTool(user.info.org.id, user.info.role.id, 2))
+    tool.init(await getUserAuthTool())
     // todo 注册工具按钮 路由
     await tool.UpdateToolRoute()
     // todo 加载用户当前组织当前角色的所有前端路由权限列表
@@ -45,7 +44,7 @@ export async function loadUserInfo() {
     tool.buttons.forEach(element => {
         tools.push(element.id)
     })
-    app.settings = await appSetting(tools)
+    // app.settings = await appSetting(tools)
 }
 
 export async function baseInfo() {
@@ -69,6 +68,7 @@ export async function orgInfo() {
     user.info.roleList = await getUserJoinOrgRoleList(user.info.org.id)
 }
 
-export async function logout() {
-
+export function getPassword(password: string) {
+    const hash = CryptoJS.SHA512(password).toString()
+    return hash
 }

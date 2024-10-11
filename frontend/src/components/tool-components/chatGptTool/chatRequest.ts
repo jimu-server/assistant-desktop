@@ -1,13 +1,13 @@
-import axiosForServer from "@/plugins/axiosForServer";
 import {Result, Tree} from "@/components/system-components/model/system";
 import {
     AppChatConversationItem, AppChatKnowledgeFile, AppChatKnowledgeInstance,
-    AppChatMessageItem,
-    LLmMole, OllamaModelResponse
-} from "@/components/tool-components/chatGptTool/chat/model/model";
-import {For} from "@babel/types";
+    AppChatMessageItem, AppChatPlugin,
+    LLmMole
+} from "@/components/tool-components/chatGptTool/model/model";
 import {GetHeaders} from "@/plugins/axiosutil";
 
+import axiosForServer from "@/plugins/axiosForServer";
+import AxiosForServer from "@/plugins/axiosForServer";
 
 
 export function getConversation() {
@@ -48,13 +48,14 @@ export function delConversation(id: string) {
 }
 
 
-export function send(conversationId: string, recoverMessageId: string, value: string, modelId: string) {
+export function sendMessage(conversationId: string, recoverMessageId: string, value: string, modelId: string, avatar: string) {
     return new Promise<Result<AppChatMessageItem>>(resolve => {
         axiosForServer.post<Result<AppChatMessageItem>>("/api/chat/send", {
             conversationId: conversationId,
             content: value,
             modelId: modelId,
             messageId: recoverMessageId,
+            avatar: avatar
         })
             .then(({data}) => {
                 resolve(data)
@@ -62,9 +63,9 @@ export function send(conversationId: string, recoverMessageId: string, value: st
     })
 }
 
-export function getUuid() {
+/*export function getUuid() {
     return new Promise<string>(resolve => {
-        axiosForServer.get<Result<string>>("/api/chat/uuid").then(({data}) => {
+        axiosForServer.get<Result<string>>("/api/uuid").then(({data}) => {
             if (data.code === 200) {
                 resolve(data.data)
                 return
@@ -73,7 +74,7 @@ export function getUuid() {
             resolve("")
         })
     })
-}
+}*/
 
 export function getConversationMessage(id: string) {
     return new Promise<AppChatMessageItem[]>(resolve => {
@@ -111,19 +112,6 @@ export function getMessage(id: string) {
     })
 }
 
-export function getLLmMole() {
-    return new Promise<OllamaModelResponse[]>(resolve => {
-        axiosForServer.get<Result<OllamaModelResponse[]>>("/api/chat/model/list").then(({data}) => {
-            if (data.code === 200) {
-                if (data.data == null) {
-                    resolve([])
-                    return;
-                }
-                resolve(data.data)
-            }
-        })
-    })
-}
 
 export function deleteModel(name: string) {
     return new Promise<Result<any>>(resolve => {
@@ -169,9 +157,9 @@ export function getFiles(pid: string) {
     })
 }
 
-export function createFiles(data: FormData) {
+export function createFiles(data: any) {
     return new Promise<Result<any>>(resolve => {
-        axiosForServer.post<Result<any>>("/api/chat/knowledge/file/create", data)
+        axiosForServer.post<Result<any>>("/api/chat/knowledge/file/create", data, {})
             .then(({data}) => {
                 resolve(data)
             })
@@ -206,4 +194,54 @@ export async function genKnowledge(name: string, files: string[]) {
         body: JSON.stringify(data),
     });
     return response;
+}
+
+export function deleteMsg(id: string[]) {
+    return new Promise<Result<any>>(resolve => {
+        axiosForServer.post<Result<any>>("/api/chat/msg/delete", {
+            ids: id
+        })
+            .then(({data}) => {
+                resolve(data)
+            })
+    })
+}
+
+
+export function getPlugins() {
+    return new Promise<AppChatPlugin[]>(resolve => {
+        axiosForServer.get<Result<AppChatPlugin[]>>("/api/chat/plugin")
+            .then(({data}) => {
+                if (data.code === 200) {
+                    if (data.data == null) {
+                        resolve([])
+                        return;
+                    }
+                    resolve(data.data)
+                }
+            })
+    })
+}
+
+
+export function delKnowledge(id: string) {
+    return new Promise<Result<any>>(resolve => {
+        axiosForServer.post<Result<any>>("/api/chat/knowledge/del", {
+            Id: id
+        })
+            .then(({data}) => {
+                resolve(data)
+            })
+    })
+}
+
+export function clearMessage(id: string) {
+    return new Promise<Result<any>>(resolve => {
+        axiosForServer.post<Result<any>>("/api/chat/conversation/message/delete", {
+            Id: id
+        })
+            .then(({data}) => {
+                resolve(data)
+            })
+    })
 }

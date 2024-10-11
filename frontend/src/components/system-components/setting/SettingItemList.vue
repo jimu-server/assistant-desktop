@@ -1,6 +1,5 @@
 <template>
   <div style="padding: 5px">
-    <!--  暂未启用  -->
     <q-input outlined dense v-model="text"/>
   </div>
   <div class="full-width" style="flex-grow: 1">
@@ -14,7 +13,7 @@
         indicator-color="transparent"
         @update:modelValue="select"
     >
-      <q-tab v-for="item in list" :name="item.entity.id" :label="item.entity.name" :ripple="false"/>
+      <q-tab v-for="item in list" :name="item.id" :label="item.name" :ripple="false"/>
     </q-tabs>
   </div>
 
@@ -26,8 +25,8 @@ import {ref} from "vue";
 
 const model = defineModel('tab', {default: ''})
 const text = ref('')
-defineProps<{
-  list: Tree<AppSetting<any>>[]
+const props = defineProps<{
+  list: AppSetting<any>[]
 }>()
 const emit = defineEmits({
   check: (item: AppSetting<any>) => {

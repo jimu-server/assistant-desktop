@@ -5,7 +5,7 @@
 <script setup lang="ts">
 
 import {onDeactivated, onMounted, ref} from "vue";
-import {useThemeStore} from "@/store/theme";
+import {useThemeStore} from "@/components/system-components/store/theme";
 
 
 const emits = defineEmits({
@@ -35,6 +35,8 @@ function mouseDown(event) {
   color.value = active.value
   document.addEventListener("mousemove", mouseMove);
   lastX.value = event.screenX;
+  document.getElementById("html").style.userSelect = 'none'
+  document.getElementById("html").style.cursor = 'default;'
 }
 
 function mouseMove(event) {
@@ -46,6 +48,8 @@ function mouseUp() {
   lastX.value = "";
   color.value = un_active.value
   document.removeEventListener("mousemove", mouseMove);
+  document.getElementById("html").style.userSelect = 'auto'
+  document.getElementById("html").style.cursor = 'default;'
 }
 
 function mouseOver() {
@@ -60,16 +64,17 @@ function mouseLeave() {
 
 <style scoped>
 .drag {
-  width: 2px;
+  width: 3px;
   height: 100%;
   background: v-bind('color');
   z-index: 10;
 }
 
-/*.drag:hover {
+.drag:hover {
   background: v-bind('active');
   width: 3px;
-}*/
+  cursor:default;
+}
 
 </style>
 

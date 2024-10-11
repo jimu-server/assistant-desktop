@@ -100,17 +100,17 @@
 import ScrollX from "@/components/tool-components/chatGptTool/widget/knowledge/ScrollX.vue";
 import {ref, watch} from "vue";
 import {getFiles} from "@/components/tool-components/chatGptTool/chatRequest";
-import {useGptStore} from "@/components/tool-components/chatGptTool/chat/store/gpt";
+import {useGptStore} from "@/components/tool-components/chatGptTool/store/gpt";
 import {Tree} from "@/components/system-components/model/system";
 import {
   AppChatKnowledgeFile,
   AppChatKnowledgeFileType,
-} from "@/components/tool-components/chatGptTool/chat/model/model";
+} from "@/components/tool-components/chatGptTool/model/model";
 import draggable from 'vuedraggable'
 import CreateFolderUI from "@/components/tool-components/chatGptTool/widget/knowledge/CreateFolderUI.vue";
 import {GetHeaders} from "@/plugins/axiosutil";
 import {ElMessage, UploadProps} from "element-plus";
-import CreateKnowledge from "@/components/tool-components/chatGptTool/widget/knowledge/CreateKnowledge.vue";
+import CreateKnowledge from "@/components/tool-components/chatGptTool/chat/message-tool-bar/knowledge-manage/CreateKnowledge.vue";
 
 
 const manageRef = ref(null)

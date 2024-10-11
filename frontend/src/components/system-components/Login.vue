@@ -3,10 +3,10 @@
     <div class="fit column justify-center">
       <div class=" fit row justify-center">
         <div class="fit column">
-          <q-bar class="bg-transparent" style="padding: 0;--wails-draggable:drag; height: 40px">
+          <q-bar class="bg-transparent" style="padding: 0;-webkit-app-region: drag; height: 40px">
             <q-space/>
-            <WindowWailsMinimizeBtn/>
-            <WindowWailsCloseBtn/>
+            <WindowMinimizeBtn/>
+            <WindowCloseBtn/>
           </q-bar>
           <q-card flat id="login" ref="logRef" class="login-box" style="flex-grow: 1">
             <div class="fit" id="loginBox">
@@ -16,9 +16,7 @@
               >
                 <div v-if="showPanel=='login'" class="fit row justify-center">
                   <div class=" full-height column justify-center">
-                    <q-form class="input  justify-center" autofocus autocorrect="off" autocomplete="off"
-                            autocapitalize="off"
-                            spellcheck="false">
+                    <q-form class="input  justify-center" autofocus autocorrect="off" autocomplete="off" autocapitalize="off" spellcheck="false">
                       <div>
                         <q-tabs
                             v-model="tab"
@@ -29,28 +27,30 @@
                           <q-tab name="default" :ripple="false" label="账号密码"/>
                           <q-tab name="phone" :ripple="false" label="短信登录"/>
                         </q-tabs>
-                        <q-tab-panels v-model="tab" animated class="shadow-2 rounded-borders">
+                        <q-tab-panels v-model="tab" animated>
                           <q-tab-panel name="default">
                             <div class="full-width row justify-center">
                               <q-input table-index
                                        :ref="el=> loginInputRef[0]=el"
                                        dense
                                        outlined
-                                       v-model="account"
+                                       v-model="account.curent.account"
                                        placeholder="账号/手机/邮箱"
                                        :error="false"
-                                       style="width: 100%"
+                                       style="width: 260px"
                               >
                                 <template v-slot:prepend>
                                   <q-icon name="jimu-yonghuming" size="20px"/>
                                 </template>
+                                <AccountMenuList v-if="account.list.length>0"/>
                               </q-input>
                             </div>
                             <div class="full-width row justify-center">
-                              <q-input table-index :ref="el=> loginInputRef[1]=el" dense outlined v-model="passwd"
+                              <q-input table-index :ref="el=> loginInputRef[1]=el" dense outlined
+                                       v-model="account.curent.password"
                                        type="password"
                                        :error="false"
-                                       style="width: 100%"
+                                       style="width: 260px"
                                        placeholder="密码"
                               >
                                 <template v-slot:prepend>
@@ -71,7 +71,7 @@
                                        v-model="phone"
                                        placeholder="手机"
                                        :error="false"
-                                       style="width: 100%"
+                                       style="width: 260px"
                               >
                                 <template v-slot:before>
                                   <q-select v-model="area" :options="areaOptions"
@@ -87,7 +87,7 @@
                             <div class="full-width row justify-center">
                               <q-input table-index :ref="el=> loginInputRef[1]=el" dense outlined v-model="code"
                                        :error="false"
-                                       style="width: 100%"
+                                       style="width: 260px"
                                        placeholder="验证码"
                               >
                                 <template v-slot:append>
@@ -107,16 +107,15 @@
                       </div>
                       <div>
                         <div class="row justify-between" style="padding-right: 8px;margin-bottom: 10px">
-                          <q-checkbox size="xs" v-model="keep" @update:model-value="keepChange" val="xs"
-                                      label="记住用户名"/>
+                          <q-checkbox size="xs" v-model="account.keep" @update:model-value="keepChange" val="xs"
+                                      label="记住账号"/>
                           <q-space/>
                           <div><span @click="showPanel='register'" class="register-but text-primary">注册账号</span>
                           </div>
                         </div>
 
                         <div class="full-width row justify-center">
-                          <q-btn color="primary" style="width: 96%" @click="login" :loading="loading"
-                                 :disable="loading">
+                          <q-btn unelevated color="primary" style="width: 96%" @click="login" :loading="loading" :disable="loading">
                             登录
                             <template v-slot:loading>
                               <q-spinner style="margin-right: 5px"/>
@@ -161,8 +160,8 @@
                       </el-form-item>
                     </el-form>
                     <div class="row justify-between" style="margin-top: 10px">
-                      <q-btn outline v-if="step==1" @click="cleanRegister" label="取消"/>
-                      <q-btn outline v-show="step == 1" @click="doRegister" color="primary" label="注册"/>
+                      <q-btn unelevated v-if="step==1" @click="cleanRegister" label="取消"/>
+                      <q-btn unelevated v-show="step == 1" @click="doRegister" color="primary" label="注册"/>
                     </div>
                   </div>
                 </div>
@@ -190,12 +189,12 @@
                   </div>
                   <div class="full-width column">
                     <div class="row justify-center" style="margin-bottom: 10px">
-                      <q-btn outline dense color="primary" @click="doReset" style="width: 90%;height: 36px">
+                      <q-btn unelevated dense color="primary" @click="doReset" style="width: 90%;height: 36px">
                         提交
                       </q-btn>
                     </div>
                     <div class="row justify-center" style="margin-bottom: 10px">
-                      <q-btn outline dense @click="showPanel='login'" style="width: 90% ;height: 36px">
+                      <q-btn unelevated dense @click="showPanel='login'" style="width: 90% ;height: 36px">
                         取消
                       </q-btn>
                     </div>
@@ -237,21 +236,23 @@
 import {computed, onMounted, onUnmounted, reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 import {homePath} from "@/variable";
-import {userStore} from "@/store/user";
+import {userStore} from "@/components/system-components/store/user";
 import {ElMessage, FormInstance, FormItemRule, FormRules} from "element-plus";
-import {loadUserInfo} from "@/components/system-components/utils/userutil";
+import {getPassword, loadUserInfo} from "@/components/system-components/utils/userutil";
 import {defaultLogin, doResetPassword, getPhoneCode, registerUser} from "@/components/system-components/request";
 import ForGetPassword from "@/components/system-components/ForGetPassword.vue";
-import {useWailsStore} from "@/components/system-components/desktop/wails/wailsDesktop";
-import WindowWailsCloseBtn from "@/components/system-components/desktop/wails/WindowWailsCloseBtn.vue";
-import WindowWailsMinimizeBtn from "@/components/system-components/desktop/wails/WindowWailsMinimizeBtn.vue";
+import WindowMinimizeBtn from "@/components/system-components/desktop/WindowMinimizeBtn.vue";
+import WindowCloseBtn from "@/components/system-components/desktop/WindowCloseBtn.vue";
+import {desktop_login} from "@/components/system-components/desktop/desktop";
+import {ipcRenderer} from "electron";
+import AccountMenuList from "@/components/system-components/AccountMenuList.vue";
+import {useAccountStore} from "@/components/system-components/store/account";
 
 const user = userStore()
 const router = useRouter()
 const centerDialogVisible = ref(false)
 const logRef = ref()
-const account = ref('')
-const passwd = ref('')
+
 const loading = ref(false)
 const tab = ref('default')
 const area = ref('+86')
@@ -271,6 +272,7 @@ const phone = ref('')
 const code = ref('')
 const value = ref(30)
 const flag = ref(false)
+const account = useAccountStore()
 let count
 const registerForm = ref({
   account: '',
@@ -285,9 +287,6 @@ const registerRef = ref<FormInstance>()
 const group = ref('phone')
 const phoneForget = ref()
 const emailForget = ref()
-
-const wails = useWailsStore()
-
 const options = [
   {
     label: '手机找回',
@@ -310,6 +309,8 @@ function keepChange(value) {
 const timepiece = computed(() => {
   return `${value.value} s后可重发`
 })
+
+const accountList = ref(false)
 
 
 function agreeAction() {
@@ -378,7 +379,8 @@ function phoneLoginAction() {
       message: '请输入手机号码',
       type: 'warning',
       plain: true,
-      grouping: true
+      grouping: true,
+      appendTo: document.getElementById('loginBox')
     })
     return
   }
@@ -387,7 +389,8 @@ function phoneLoginAction() {
       message: '请输入验证码',
       type: 'warning',
       plain: true,
-      grouping: true
+      grouping: true,
+      appendTo: document.getElementById('loginBox')
     })
     return
   }
@@ -398,13 +401,14 @@ function phoneLoginAction() {
 }
 
 function defaultLoginAction() {
-  if (account.value == '' || passwd.value == '') {
+  if (account.curent.account == '' || account.curent.password == '') {
     ElMessage({
       message: '输入账号密码',
       type: 'warning',
       duration: 1000,
       plain: true,
       grouping: true,
+      appendTo: document.getElementById('loginBox')
     })
     return
   }
@@ -413,15 +417,20 @@ function defaultLoginAction() {
     return;
   }
   loading.value = true
-  defaultLogin(account.value, passwd.value).then(async (data) => {
+  defaultLogin(account.curent.account, account.curent.password).then(async (data) => {
     if (data.code == 200) {
+      // 更新 token
       user.info.token = data.data.token
-      await loadUserInfo()
       setTimeout(async () => {
-        wails.desktop_hide()
-        await wails.desktop_login()
-        await router.push(homePath)
+        desktop_login()
         loading.value = false
+        if (!account.keep) account.curent.password = ''
+        // 更新当先账号的信息到 session 存储
+        account.addAccount({
+          account: account.curent.account,
+          password: account.curent.password,
+        })
+
       }, 1000)
       return
     }
@@ -442,6 +451,8 @@ async function doRegister() {
           type: 'success',
           duration: 2000,
           plain: true,
+          grouping: true,
+          appendTo: document.getElementById('loginBox')
         })
         showPanel.value = 'login'
       }
@@ -470,6 +481,7 @@ async function doReset() {
       duration: 1000,
       plain: true,
       grouping: true,
+      appendTo: document.getElementById('loginBox')
     })
     setTimeout(() => {
       showPanel.value = 'login'
@@ -534,10 +546,12 @@ const rules = reactive<FormRules<typeof registerForm>>({
 })
 
 
+
+
+
 onMounted(() => {
   loginBox.value = document.getElementById('loginBox')
   window.addEventListener('keydown', loginAction)
-  wails.desktop_logout()
 })
 
 onUnmounted(() => {
@@ -554,6 +568,7 @@ onUnmounted(() => {
   flex-direction: column;
   width: 360px;
   height: 400px;
+  overflow: hidden;
 }
 
 #login {

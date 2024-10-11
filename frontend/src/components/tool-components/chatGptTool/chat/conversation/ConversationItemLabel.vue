@@ -6,8 +6,8 @@
       clickable
       @click="selectChat(item,index)"
       :active-class="item.active? 'chat-active text-white':'text-black'"
-      style="border-radius: 5px;margin-top: 5px"
-      :class="item.active?'chat-active text-white':'chat-unactive'"
+      style="border-radius: 3px;margin-top: 5px;width: 100%"
+      :class="item.active?'chat-active text-white':'chat-unactive hvr-wobble-horizontal'"
       :theme="theme.dark?'dark':'light'"
   >
     <!--    好友头像     -->
@@ -55,13 +55,16 @@ import {formatTime} from "@/components/system-components/utils/systemutils";
 import {ref} from "vue";
 
 import {ElMessage} from "element-plus";
-import {ConversationEntity} from "@/components/tool-components/chatGptTool/chat/model/chat";
-import {useGptStore} from "@/components/tool-components/chatGptTool/chat/store/gpt";
+import {ConversationEntity} from "@/components/tool-components/chatGptTool/model/chat";
+import {useGptStore} from "@/components/tool-components/chatGptTool/store/gpt";
 import {IsEmpty} from "@/components/tool-components/chatGptTool/chat/chatutils";
-import {AppChatConversationItem} from "@/components/tool-components/chatGptTool/chat/model/model";
+import {AppChatConversationItem} from "@/components/tool-components/chatGptTool/model/model";
 import {delConversation, getConversation} from "@/components/tool-components/chatGptTool/chatRequest";
-import {useThemeStore} from "@/store/theme";
+import {useThemeStore} from "@/components/system-components/store/theme";
+import {colors} from "quasar";
+import ConversationItemMenu from "@/components/tool-components/chatGptTool/chat/conversation/ConversationItemMenu.vue";
 
+const {getPaletteColor} = colors
 
 defineProps<{
   item: ConversationEntity,
@@ -127,10 +130,27 @@ function latestMsg(conver: AppChatConversationItem) {
 
 <style scoped>
 
+/* Grow */
+.hvr-grow2 {
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  backface-visibility: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  transition-duration: 0.3s;
+  transition-property: transform;
+}
+
+.hvr-grow2:hover,
+.hvr-grow2:focus,
+.hvr-grow2:active {
+  transform: scale(1.1);
+}
 </style>
 <style>
 .chat-active {
-  background-color: #0098fe;
+  background-color: v-bind('getPaletteColor("primary")');
   color: #ffffff;
 }
 

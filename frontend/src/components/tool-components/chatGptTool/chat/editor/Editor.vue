@@ -1,28 +1,12 @@
 <template>
-  <div class="editor fit column" @click="Focus" style="overflow: auto;position: relative">
+  <div class="editor fit column" @click="Focus" style="overflow: hidden;position: relative">
     <div ref="editorArea" class="fit" id="editor" @paste="Paste" spellcheck="false"></div>
-    <q-menu
-        context-menu
-    >
-      <q-list dense>
-        <q-item dense clickable v-close-popup>
-          <q-item-section>
-            <q-item-label>test</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item dense clickable v-close-popup>
-          <q-item-section>
-            <q-item-label>test</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </q-menu>
   </div>
 </template>
 
 <script setup lang="ts">
 
-import {onMounted, onUnmounted, reactive, ref} from "vue";
+import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 
 
 // CKEditorInspector 编辑器开发的检查工具
@@ -35,12 +19,12 @@ import {colors} from "quasar";
 import {BalloonEditor} from "@ckeditor/ckeditor5-editor-balloon";
 import {keyCodes} from '@ckeditor/ckeditor5-utils/src/keyboard';
 
-import {useGptStore} from "@/components/tool-components/chatGptTool/chat/store/gpt";
-import {ChatMessageEntity, MessageItem, MessageType} from "@/components/tool-components/chatGptTool/chat/model/chat";
+import {useGptStore} from "@/components/tool-components/chatGptTool/store/gpt";
+import {ChatMessageEntity, MessageItem, MessageType} from "@/components/tool-components/chatGptTool/model/chat";
 import {createEditor} from "@/components/tool-components/chatGptTool/chat/editor/ckeditor";
 import {TextWatcher} from "@ckeditor/ckeditor5-typing";
 import {createRegExp} from "@ckeditor/ckeditor5-mention/src/mentionui";
-
+import {useAiPluginStore} from "@/components/tool-components/chatGptTool/store/plugin";
 
 
 const {getPaletteColor} = colors
@@ -69,6 +53,7 @@ const editorArea = ref()
 // 编辑器 当前的字符数量双向绑定
 const characters = defineModel('characters', {default: 0})
 const ctx = useGptStore()
+const plugin = useAiPluginStore()
 // 当前编辑器是否处于回复消息状态
 const isRef = ref(false)
 
@@ -265,6 +250,24 @@ function copyVideo(file: Blob) {
 
 }
 
+/*
+ * @description: 检查当前选中插件的模型已经安装到本地,若本地未安装,则经用编辑器并且禁用发送按钮
+ * */
+watch(() => plugin.currentPlugin, (value) => {
+  // 检查插件在本地是否存在插件所需要用到的模型
+  let number = ctx.ui.modelList.findIndex(item => {
+    return item.model === value.model
+  });
+  if (editor) {
+    if (number === -1) {
+      editor.enableReadOnlyMode('editor')
+      ctx.ui.sendDisable = true
+      return
+    }
+    ctx.ui.sendDisable = false
+    editor.disableReadOnlyMode('editor');
+  }
+})
 
 
 onMounted(async () => {
@@ -272,9 +275,6 @@ onMounted(async () => {
   // 初始化编辑器
   editor = await createEditor(elementById, {...editorConfig, ...toolbar.value})
   EditorEvents(editor)
-  console.log(editor)
-  // 开启 or 关闭 对指定的编辑区域检查
-  // CKEditorInspector.attach(balloonEditor)
 })
 
 function EditorEvents(editor: BalloonEditor) {
@@ -303,7 +303,7 @@ function EditorEvents(editor: BalloonEditor) {
   // 监听实现快捷键组合发送消息
   editor.editing.view.document.on('keydown', (event, data) => {
     // 判断 ctrl+enter 组合发送消息
-    if (keyCodes.enter === data.keyCode && data.ctrlKey) {
+    if (keyCodes.enter === data.keyCode && data.ctrlKey && !ctx.ui.replying) {
       // 检查当前的消息模式
       if (ctx.ui.send) {
         console.log('ctrl+enter')
@@ -320,7 +320,7 @@ function EditorEvents(editor: BalloonEditor) {
     }
 
     // 没有 按住 ctrl 使用 enter 发送消息
-    if (keyCodes.enter === data.keyCode && !data.ctrlKey) {
+    if (keyCodes.enter === data.keyCode && !data.ctrlKey && !ctx.ui.replying) {
       if (!ctx.ui.send) {
         console.log('enter')
         // 执行发送消息触发事件
@@ -438,6 +438,10 @@ onUnmounted(() => {
   padding: 1em !important;
   background-color: rgba(227, 231, 232, 0.38) !important;
   border-radius: 3px !important;
+}
+
+.ck-read-only {
+  background-color: rgba(245, 245, 245, 0.33);
 }
 
 </style>

@@ -25,7 +25,8 @@
         </slot>
       </div>
       <!--   消息正文   -->
-      <div ref="bodyRef" v-show="isShow" class="chat-body" @mouseover="overMessage=true" @mouseleave="outOverMessage">
+      <div ref="bodyRef" class="chat-body" @mouseover="overMessage=true"
+           @mouseleave="outOverMessage">
         <!--   用户消息展示     -->
         <TextMessage v-if="message.role=='user'" :message="message" :index="index"/>
         <!--   gpt消息展示     -->
@@ -40,13 +41,6 @@
           <div v-show="foldFlag" class="gpt-fold" :theme="theme.dark?'dark':''"></div>
           <!--    消息操作按钮      -->
           <div class="full-width row reverse" style="margin-top: 5px">
-            <MessageAction v-show="isShowAction">
-              <q-icon class="msg-option" size="15px" dense flat name="jimu-shanchu">
-                <q-tooltip :offset="[0, 10]">
-                  删除
-                </q-tooltip>
-              </q-icon>
-            </MessageAction>
             <MessageAction v-show="isShowAction">
               <q-icon class="msg-option" size="15px" dense flat name="jimu-fuzhi">
                 <q-tooltip :offset="[0, 10]">
@@ -100,13 +94,7 @@
         <!--  用户消息操作      -->
         <template v-if="send">
           <div class="full-width row" style="margin-top: 5px">
-            <MessageAction v-show="isShowAction">
-              <q-icon class="user-msg-option" size="15px" dense flat name="jimu-shanchu">
-                <q-tooltip :offset="[0, 10]">
-                  删除
-                </q-tooltip>
-              </q-icon>
-            </MessageAction>
+
           </div>
         </template>
       </div>
@@ -115,15 +103,15 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 
 
-import {userStore} from "@/store/user";
-import {useGptStore} from "@/components/tool-components/chatGptTool/chat/store/gpt";
-import {AppChatMessageItem} from "@/components/tool-components/chatGptTool/chat/model/model";
+import {userStore} from "@/components/system-components/store/user";
+import {useGptStore} from "@/components/tool-components/chatGptTool/store/gpt";
+import {AppChatMessageItem} from "@/components/tool-components/chatGptTool/model/model";
 import {retryMessage} from "@/components/tool-components/chatGptTool/gptutil";
 import MarkDownMessage from "@/components/tool-components/chatGptTool/chat/message/MarkDownMessage.vue";
-import {useThemeStore} from "@/store/theme";
+import {useThemeStore} from "@/components/system-components/store/theme";
 import MessageAction from "@/components/tool-components/chatGptTool/chat/message/MessageAction.vue";
 import TextMessage from "@/components/tool-components/chatGptTool/chat/message/TextMessage.vue";
 
@@ -137,17 +125,17 @@ const overMessage = ref(false)
 const overFooter = ref(false)
 // 是否处于重试状态
 const doRetry = ref(false)
+const emits = defineEmits({
+  loading: function (width: number, height: number) {
+
+  },
+})
 const props = defineProps<
     {
       message: AppChatMessageItem,
       index: number
     }
 >()
-
-
-function deleteMessage() {
-
-}
 
 function outOverMessage() {
   setTimeout(() => {
@@ -160,14 +148,6 @@ function outOverFooter() {
     overFooter.value = false
   }, 200)
 }
-
-/*
-* @description: 根据消息数量控制面板消息加载渲染
-* */
-const isShow = computed(() => {
-  if (ctx.CurrentChat.messageList.length < 50) return true
-  return ctx.view.includes(props.message.id) || ctx.newView.includes(props.message.id)
-})
 
 let info = props.message!
 const send = ref(false)
@@ -183,7 +163,6 @@ switch (props.message.role) {
     header.value = user.info.user.picture
     break
 }
-
 
 // 消息体折叠高度阈值 超过300可以折叠
 const defaultHeight = ref(300)
@@ -221,6 +200,7 @@ switch (info.role) {
     if (model) {
       name.value = model.name
     }
+    name.value = 'Assistant'
     break
 }
 
@@ -249,7 +229,9 @@ const isShowFoldAction = computed(() => {
 * @description: 对当前高度进行一个延迟计算,防止计算过快导致无法正常显示折叠按钮
 * */
 setTimeout(() => {
-  currentHeight.value = bodyRef.value.clientHeight
+  if (bodyRef.value) {
+    currentHeight.value = bodyRef.value.clientHeight
+  }
 }, 500)
 
 /*
@@ -312,6 +294,17 @@ function retry() {
 
 }
 
+
+onMounted(() => {
+  let byId = document.getElementById(props.message.id);
+  if (byId) {
+    var rect = byId.getBoundingClientRect();
+    var width = rect.width;
+    var height = rect.height;
+    emits("loading", width, height)
+  }
+})
+
 </script>
 
 
@@ -327,7 +320,7 @@ function retry() {
 }
 
 .chat-message-body {
-  max-width: 70%;
+  max-width: 65%;
 }
 
 .chat-header {
@@ -340,6 +333,8 @@ function retry() {
   flex-direction: v-bind('direction_text');
   max-height: v-bind('fold');
   overflow: hidden;
+  border-radius: 5px;
+  background: transparent;
 }
 
 

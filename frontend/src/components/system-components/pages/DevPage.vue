@@ -1,18 +1,21 @@
 <template>
-  <main-page style="height: 800px">
-    <div class="fit row justify-center">
+  <main-page class="fit">
+    <div id="markdown-container" class="row justify-center"
+         style="width: 500px;height: 500px;overflow: auto;position: relative">
+      <div id="markdown-container">
 
+      </div>
     </div>
-
   </main-page>
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
+import {h, onMounted, ref, render} from "vue";
+import {useAppStore} from "@/components/system-components/store/app";
 
-let observers = [];
-const scroll = ref(null);
-// scrollObserver.observe(document.getElementById("box0"))
+const app = useAppStore()
+
+
 onMounted(() => {
 
 })
@@ -22,11 +25,7 @@ onMounted(() => {
 
 
 <style scoped>
-
-.box {
-  width: 100px;
-  height: 100px;
-  background-color: rgba(140, 147, 157, 0.42);
-  margin-bottom: 20px;
+#markdown-container {
+  position: absolute;
 }
 </style>

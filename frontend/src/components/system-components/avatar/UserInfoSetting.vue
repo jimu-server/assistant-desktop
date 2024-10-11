@@ -96,7 +96,7 @@
             </el-tab-pane>
             <el-tab-pane label="账号安全" name="secure">
               <div class="fit" style="padding: 5px">
-                <div >
+                <div class="fit">
                   <SecureLabel label="设置密码" :value="secure.password">
                     <template #value="{value}">
                       <template v-if="value==''">
@@ -180,7 +180,7 @@
 
 
 import {onMounted, ref, watch} from "vue";
-import {userStore} from "@/store/user";
+import {userStore} from "@/components/system-components/store/user";
 import {ElMessage, UploadProps} from "element-plus";
 import InfoEditor from "@/components/system-components/avatar/InfoEditor.vue";
 import {
@@ -192,7 +192,7 @@ import {
   updateUserOrgRole
 } from "@/components/system-components/request";
 import {baseInfo} from "@/components/system-components/utils/userutil";
-import {useAppStore} from "@/store/app";
+import {useAppStore} from "@/components/system-components/store/app";
 import {Role} from "@/components/system-components/model/system";
 import AlterPasswordDialog from "@/components/system-components/avatar/AlterPasswordDialog.vue";
 import AlterPhoneDialog from "@/components/system-components/avatar/AlterPhoneDialog.vue";

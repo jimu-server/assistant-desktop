@@ -2,33 +2,39 @@
   <div class="edit fit">
     <div class="edit-tool row">
       <ToolWidget>
-        <GPTSettingPanel/>
+        <ChatPlugin/>
       </ToolWidget>
+
       <ToolWidget>
-        <KnowledgeOptionsPanel/>
+        <ClearHistory/>
       </ToolWidget>
+
+
+
+      <q-space/>
+      <!--  消息上下文携带配置按钮    -->
       <div class="column justify-center">
-        <q-toggle v-model="ctx.ui.autoHistory" size="sm" color="primary" checked-icon="jimu-shijian-2">
+        <q-toggle v-model="ctx.ui.autoHistory" size="md" color="primary" checked-icon="jimu-shijian-2">
           <q-tooltip :offset="[0, 0]">
             {{ ctx.ui.autoHistory ? '取消上下文' : '开启上下文' }}
           </q-tooltip>
         </q-toggle>
       </div>
+      <!--  消息折叠配置按钮    -->
       <div class="column justify-center">
-        <q-toggle v-model="ctx.ui.autoFold" size="sm" color="primary">
+        <q-toggle v-model="ctx.ui.autoFold" size="md" color="primary">
           <q-tooltip :offset="[0, 0]">
             {{ ctx.ui.autoFold ? '取消折叠新消息' : '自动折叠新消息' }}
           </q-tooltip>
         </q-toggle>
       </div>
-      <q-space/>
       <!--   终止gpt回答   -->
       <ToolWidget v-show="ctx.ui.replying">
         <div class="row">
           <div class="full-height column justify-center">
             <q-spinner-comment
                 color="primary"
-                size="sm"
+                size="md"
             />
             <q-tooltip :offset="[0, 0]">回复中</q-tooltip>
           </div>
@@ -37,13 +43,12 @@
           </div>
         </div>
       </ToolWidget>
-      <div class="column justify-center">
-        <q-icon size="20px" class="edit-tool-option" name="jimu-shijian-2">
-          <q-tooltip :offset="[0, 0]">
-            历史消息
-          </q-tooltip>
+
+      <ToolWidget>
+        <q-icon size="20px" class="edit-tool-option" name="jimu-shijian-2"
+                >
         </q-icon>
-      </div>
+      </ToolWidget>
       <ToolWidget style="margin-right: 5px">
         <q-icon size="20px" class="edit-tool-option" :name="isMax?'jimu-zuixiaohua':'jimu-zuidahua'"
                 @click.stop="max">
@@ -61,9 +66,10 @@
     </div>
     <div class="send-box row reverse">
       <div class="column justify-center">
-        <q-btn-dropdown square :ripple="false" split no-caps align="left" dense color="primary" label="发 送 "
+        <q-btn-dropdown  :ripple="false" split no-caps align="left" dense color="primary" label="发 送 "
                         icon="jimu-send"
                         @click="sendMessage"
+                         :disable="ctx.ui.replying || ctx.ui.sendDisable"
                         dropdown-icon="jimu-xiangxia-2"
                         style="height:30px;width: 109px;margin-right: 10px"
                         content-class="send-box-dropdown">
@@ -91,9 +97,11 @@ import {onMounted, ref, watch} from "vue";
 import {colors} from "quasar";
 import Editor from "./Editor.vue";
 import {IsEmpty} from "@/components/system-components/utils/systemutils";
-import {ChatMessageEntity, MessageType} from "@/components/tool-components/chatGptTool/chat/model/chat";
-import {useGptStore} from "@/components/tool-components/chatGptTool/chat/store/gpt";
-import KnowledgeOptionsPanel from "@/components/tool-components/chatGptTool/widget/knowledge/KnowledgeOptionsPanel.vue";
+import {ChatMessageEntity, MessageType} from "@/components/tool-components/chatGptTool/model/chat";
+import {useGptStore} from "@/components/tool-components/chatGptTool/store/gpt";
+import ClearHistory from "@/components/tool-components/chatGptTool/chat/editor-tool-bar/clear-history/ClearHistory.vue";
+import ToolWidget from "@/components/tool-components/chatGptTool/chat/editor/tool/ToolWidget.vue";
+import ChatPlugin from "@/components/tool-components/chatGptTool/chat/editor-tool-bar/plugins/ChatPlugin.vue";
 
 
 
@@ -124,14 +132,7 @@ const editRef = ref()
 const characters = ref(0)
 const shame = ref(false)
 const ctx = useGptStore()
-const info = ref(null)
 const isMax = ref(false)
-const MaxHeight = ref({
-  tool: '15%',
-  edit: '60%',
-  send: '25%'
-})
-
 if (!ctx.ui.send) {
   shape.value = 'Enter'
 } else {
@@ -139,20 +140,13 @@ if (!ctx.ui.send) {
 }
 
 function stopReplying() {
-  ctx.ui.stop = true
+  if (ctx.ui.currentStream) {
+    ctx.ui.currentStream.Stop()
+    ctx.ui.stop = true
+  }
 }
 
 function max(event) {
-  isMax.value = !isMax.value
-  if (!isMax.value) {
-    MaxHeight.value.tool = '10%'
-    MaxHeight.value.edit = '65%'
-    MaxHeight.value.send = '5%'
-  } else {
-    MaxHeight.value.tool = '5%'
-    MaxHeight.value.edit = '85%'
-    MaxHeight.value.send = '10%'
-  }
   emits('MaxEditor')
 }
 
@@ -220,18 +214,17 @@ onMounted(() => {
 
 .edit-tool {
   margin-top: 2px;
-  height: v-bind('MaxHeight.tool');
 }
 
 .edit-box {
-  height: v-bind('MaxHeight.edit');
   width: 100%;
-  overflow: hidden
+  flex-grow: 1;
+  overflow: auto;
 }
 
 .send-box {
   width: 100%;
-  height: v-bind('MaxHeight.send');
+  min-height: 40px !important;
 }
 
 .edit-tool-option {

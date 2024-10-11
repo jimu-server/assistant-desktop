@@ -7,23 +7,25 @@
         before-class="conversations"
         after-class="chat"
         separator-class="separator"
-        :style="{height:app.ui.page.height}"
+        class="fit"
     >
       <!--   聊天会话消息列表   -->
       <template v-slot:before>
         <div ref="conversationListRef" class="fit column" style="overflow: hidden;">
           <div class="row justify-center" style="padding: 7px">
-            <search-input width="100%"/>
+            <search-input width="100%" @search="search"/>
           </div>
           <div style="overflow:hidden;flex-grow: 1">
             <q-scroll-area :visible="false" class="fit">
               <div class="fit" style="overflow:hidden;">
                 <q-list padding style="padding: 5px">
                   <ConversationItemLabel
-                      v-for="(item,index) in ctx.CurrentChat.conversationList"
+                      v-for="(item,index) in ctx.sortConversation"
                       :item="item"
                       :index="index"
-                      @select="selectChat"/>
+                      @select="selectChat"
+                      style="transition: all 0.5s ease;"
+                  />
                 </q-list>
               </div>
             </q-scroll-area>
@@ -66,41 +68,36 @@
 import {onMounted, ref} from "vue";
 
 
-import {UpdateChatViewUI} from "@/plugins/evenKey";
+import {SendActionScroll, UpdateChatViewUI} from "@/plugins/evenKey";
 import {colors} from "quasar";
 import emitter from "@/plugins/event";
 import SearchInput from "@/components/tool-components/chatGptTool/widget/SearchInput.vue";
 
-import {useAppStore} from "@/store/app";
+import {useAppStore} from "@/components/system-components/store/app";
 import {ElMessage} from "element-plus";
-import {useGptStore} from "@/components/tool-components/chatGptTool/chat/store/gpt";
+import {useGptStore} from "@/components/tool-components/chatGptTool/store/gpt";
 import {IsEmpty} from "@/components/tool-components/chatGptTool/chat/chatutils";
 import {
   ChatMessageEntity,
   ConversationEntity,
   MessageType
-} from "@/components/tool-components/chatGptTool/chat/model/chat";
-import {SendTextMessage} from "@/components/tool-components/chatGptTool/gptutil";
+} from "@/components/tool-components/chatGptTool/model/chat";
+import {getReply, getSendCtx} from "@/components/tool-components/chatGptTool/gptutil";
 import draggable from 'vuedraggable'
+import {sendMessage} from "@/components/tool-components/chatGptTool/chatRequest";
+import {AiPlugin} from "@/components/tool-components/chatGptTool/variable";
+import {sendDefaultMessage} from "@/components/tool-components/chatGptTool/send_message";
 
 const {getPaletteColor} = colors
 
 const app = useAppStore()
 const splitterModel = ref(20)
-const splitterModelLimit = ref([20, 30])
-const splitterModel2 = ref(30)
-const splitterModel2Limit = ref([30, 50])
-
+const splitterModelLimit = ref([20, 20])
+const splitterModel2 = ref(25)
+const splitterModel2Limit = ref([25, 50])
 const conversationListRef = ref()
-
-
-const scrollAreaRef = ref()
 const messageListRef = ref()
-
-
 const ctx = useGptStore()
-ctx.test='init'
-
 
 if (!IsEmpty(ctx.CurrentChat.Current)) {
   ctx.ui.showChat = true
@@ -131,61 +128,21 @@ function selectChat(data: ConversationEntity, index: number) {
   }, 100)
 }
 
-
-/*
-*   @description: 删除聊天
-* */
-async function CloseConversation(id: string) {
-  // 找到当前的关闭会话列表位置
-  let index = ctx.CurrentChat.conversationList.findIndex(item => {
-    return item.Conversation.id === id
-  })
-  ctx.CurrentChat.conversationList.splice(index, 1)
-
-  if (ctx.CurrentChat.conversationList.length == 0) {
-    // 清空 当前的所有聊天状态及其缓存
-    //
-    ctx.CurrentChat.Current = null
-    ctx.CurrentChat.messageList = []
-    ctx.CurrentChat.conversationList = []
-    ctx.ui.showChat = false
-    return
-  }
-  if (ctx.CurrentChat.Current.Conversation.id == id) {
-    // 删除一个聊天会话 如果有多个会话 则默认显示第一个会话
-    if (ctx.CurrentChat.conversationList.length > 0) {
-      selectChat(ctx.CurrentChat.conversationList[0], 0)
-    }
-  }
-}
-
 /*
 * @description: 正常消息编辑器发送消息
 * */
 async function send(message: ChatMessageEntity[]) {
-  // 计算当前用户发送的消息对于回复gpt的那条消息
-  let messageId = ""
-  if (ctx.CurrentChat.messageList.length > 0) {
-    let data = ctx.CurrentChat.messageList[ctx.CurrentChat.messageList.length - 1]
-    // 如果最后一次的消息依就是用户的,gpt那边没有,应该认为这一条用户消息为一个新消息
-    if (data.role !== 'user') {
-      messageId = data.id
-    }
-  }
-  for (const item of message) {
-    switch (item.contentType) {
-        // 文本消息,包含表情
-      case MessageType.TextMessage:
-        await SendTextMessage(messageId, item.data)
-        break
-        // 图片消息
-      case MessageType.PictureMessage:
-        // await SendImageMessage(item)
-        break
-        // 自定义消息类型
-      case MessageType.CustomMessage:
-        break
-    }
+  let sendCtx = getSendCtx();
+  switch (sendCtx.plugin.code) {
+    case AiPlugin.Programming:
+      sendDefaultMessage(sendCtx, message)
+      break
+    case AiPlugin.Knowledge:
+      sendDefaultMessage(sendCtx, message)
+      break
+    case AiPlugin.Default:
+      sendDefaultMessage(sendCtx, message)
+      break
   }
 }
 
@@ -205,13 +162,11 @@ function maxInput() {
 emitter.on(UpdateChatViewUI, init)
 
 async function init() {
-  // 加载会话
-  await ctx.GetConversationList()
-  // 加载模型
-  await ctx.GetModelList()
 
-  // 状态数据 更新 会话ui 需要对 showChat 参数进行重置
-  await ctx.GetConversationList()
+}
+
+function search(value: string) {
+  ctx.ui.search = value
 }
 
 
@@ -231,6 +186,18 @@ onMounted(init)
 
 .chat-tool-opt:hover {
   color: v-bind('getPaletteColor("primary")');
+}
+
+
+.list-enter-active, .list-leave-active {
+  transition: all 0.5s;
+}
+.list-enter, .list-leave-to /* .list-leave-active for <2.1.8 */ {
+  /*opacity: 0;*/
+  /*transform: translateY(30px);*/
+}
+.list-move {
+ /* transition: transform 0.3s;*/
 }
 
 

@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-center drawer-opt">
-    <q-btn dense flat :icon="btn.icon" @click="action">
+    <q-btn class="too-btn" dense flat :icon="btn.icon" @click.stop="action">
       <q-tooltip anchor="center end" self="center start">
         {{ btn.tip }}
       </q-tooltip>
@@ -12,33 +12,36 @@
 
 <script setup lang="ts">
 import {Tool, WindowLabel} from "@/components/system-components/model/system";
-// import router from "@/route";
-import {useWindowsStore} from "@/store/windows";
 
-import {useToolStore} from "@/store/tool";
-import {userStore} from "@/store/user";
-import {ToolBtnType, ToolLayout} from "@/components/system-components/model/menu";
-import ToolNotify from "@/components/system-components/layouts/tool/ToolNotify.vue";
+import {useWindowsStore} from "@/components/system-components/store/windows";
+
+import {useToolStore} from "@/components/system-components/store/tool";
+import {userStore} from "@/components/system-components/store/user";
+import {ToolBtnType, ToolLayout} from "@/components/system-components/model/enum";
 import {useRouter} from "vue-router";
+import ToolNotify from "@/components/system-components/layouts/tool/ToolNotify.vue";
 
 const props = defineProps<{
   btn: Tool
   position: number
 }>()
-const router = useRouter()
 
 const emits = defineEmits({
   receive: function (data) {
 
+  },
+  btnClick: function () {
+
   }
 })
 
+const router = useRouter()
 
-const user = userStore()
 const tool = useToolStore()
 const widowsLabel = useWindowsStore()
 
 function action() {
+  emits('btnClick')
   switch (props.btn.type) {
     case ToolBtnType.ToolRouteBtn:
       addWindows(props.btn.path, props.btn.name, props.btn.icon)
@@ -69,5 +72,10 @@ function receive(data) {
 </script>
 
 <style scoped>
+/*.too-btn{
 
+}
+.too-btn:hover{
+  background-color: rgba(209, 211, 218, 0.58);
+}*/
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="full-height" style="width: 56px">
+  <div class="fit">
     <slot>
 
     </slot>

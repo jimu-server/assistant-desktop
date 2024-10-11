@@ -1,9 +1,10 @@
 import axios, {AxiosInstance, AxiosResponse} from 'axios';
 import {ElNotification} from "element-plus";
 import {GetHeaders} from "@/plugins/axiosutil";
+import {VITE_APP_SERVER} from "@/env";
 
 const Axios: AxiosInstance = axios.create({
-    baseURL: 'http://127.0.0.1:8080',
+    baseURL: VITE_APP_SERVER,
     timeout: 5000,
 })
 
@@ -16,7 +17,7 @@ Axios.interceptors.request.use(function (request) {
 Axios.interceptors.response.use(function (response: AxiosResponse<any>) {
     return response
 }, function (error) {
-    errHandler(error.response)
+    // errHandler(error.response)
     return error.response
 })
 
