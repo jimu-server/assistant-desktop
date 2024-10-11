@@ -7,11 +7,6 @@ import pinia from "@/pinia";
 
 const routes: RouteRecordRaw[] = [
     {
-        path: '/tray',
-        name: 'tray',
-        component: () => import('@/components/system-components/desktop/TrayMenu.vue')
-    },
-    {
         path: rootPath,
         name: rootPathName,
         component: () => import('@/components/system-components/layouts/MainWindow.vue'),

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {desktop_close} from "@/components/system-components/desktop/desktop";
 import {useWailsStore} from "@/components/system-components/desktop/wails/wailsDesktop";
 
 const desktop = useWailsStore();

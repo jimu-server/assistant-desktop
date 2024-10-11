@@ -13,7 +13,6 @@ import {useQuasar} from "quasar";
 import {useThemeStore} from "./components/system-components/store/theme";
 import {useAppStore} from "@/components/system-components/store/app";
 
-import {desktop_open_dev} from "@/components/system-components/desktop/desktop";
 import {useRouter} from "vue-router";
 import route from "@/route";
 
@@ -30,14 +29,6 @@ window.onresize = function () {
     app.ui.page.height = parseInt(h)
   }
 }
-
-
-/*
-* @description 退出登录触发,使用事件通知是为了优化用户体验效果
-* */
-ipcRenderer.on('login', async (event, arg) => {
-  await router.push('/login')
-})
 
 
 $q.iconMapFn = (iconName) => {
@@ -76,7 +67,7 @@ onMounted(() => {
 
   window.onkeydown = function (event) {
     if (event.key == "F12") {
-      desktop_open_dev()
+
     }
   }
 })

@@ -1,6 +1,5 @@
 import {App, Component} from "vue";
 import ModelManagePage from "@/components/tool-components/chatGptTool/manage/ModelManagePage.vue";
-import Login from "@/components/system-components/Login.vue";
 import OllamaSetting from "@/components/tool-components/chatGptTool/setting/ApiSetting.vue";
 import UserInfoSetting from "@/components/system-components/avatar/UserInfoSetting.vue";
 import ManageTool from "@/components/system-tool/manageTool/ManageTool.vue";
@@ -41,7 +40,6 @@ const components = [
     FunManagePage,
     ToolManagePage,
     ModelManagePage,
-    Login,
     OllamaSetting,
     UserInfoSetting,
     KnowledgePanelView,
